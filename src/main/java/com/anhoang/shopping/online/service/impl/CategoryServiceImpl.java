@@ -1,0 +1,56 @@
+package com.anhoang.shopping.online.service.impl;
+
+import com.anhoang.shopping.online.model.Category;
+import com.anhoang.shopping.online.respository.CategoryRespository;
+import com.anhoang.shopping.online.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.util.List;
+
+@Service
+public class CategoryServiceImpl implements CategoryService {
+
+    @Autowired
+    private CategoryRespository categoryResposity;
+
+    @Override
+    public Category saveCategory(Category category){
+        return categoryResposity.save(category);
+    }
+
+    @Override
+    public Boolean existCategory(String name){
+        return categoryResposity.existsByName(name);
+    }
+
+    @Override
+    public List<Category> getAllCategory() {
+        return categoryResposity.findAll();
+    }
+
+    @Override
+    public Boolean deleteCategory(int id){
+        Category category = categoryResposity.findById(id).orElse(null);
+        if(!ObjectUtils.isEmpty(category)){
+            categoryResposity.delete(category);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Category getCategoryById(int id){
+        Category category = categoryResposity.findById(id).orElse(null);
+        return category;
+    }
+
+    @Override
+    public List<Category> getAllActiveCategory(){
+        List<Category> categories = categoryResposity.findByIsActiveTrue();
+        return categories;
+    }
+}
+
+

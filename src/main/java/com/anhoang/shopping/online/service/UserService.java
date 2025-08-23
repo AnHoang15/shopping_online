@@ -1,0 +1,11 @@
+package com.anhoang.shopping.online.service;
+
+import com.anhoang.shopping.online.model.UserDtls;
+
+import java.util.List;
+
+public interface UserService {
+    public UserDtls saveUser(UserDtls user);
+    public UserDtls getUserByEmail(String email);
+    public List<UserDtls> getUsers(String role);
+}
