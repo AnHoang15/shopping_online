@@ -40,9 +40,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
     {
         http.csrf(csrf->csrf.disable()).cors(cors->cors.disable())
-                .authorizeHttpRequests(req->req.requestMatchers("/user/**").hasRole("USER")
+                .authorizeHttpRequests(req->req
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/**").permitAll())
+                        .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers("/", "/signin", "/register", "/css/**", "/js/**", "/img/**").permitAll())
                 .formLogin(form -> form
                     .loginPage("/signin")
                     .loginProcessingUrl("/login")

@@ -42,15 +42,15 @@
                             <tr th:each="u,c:${users}">
                                 <th scope="row">[[${c.count}]]</th>
                                 <th><img th:src="@{'/img/profile_img/' + ${u.profileImage}}" width="70px" height="70px" alt=""></th>
-                                <<td>[[${u.name}]]</td>
+                                <td>[[${u.name}]]</td>
                                 <td>[[${u.email}]]</td>
                                 <td>[[${u.mobileNumber}]]</td>
                                 <td>[[${u.address+','+u.city+','+u.state+','+u.pincode}]]</td>
                                 <td>[[${u.isEnable}]]</td>
 
                                 <td>
-                                    <a th:href="@{'/admin/editProduct/'+${u.id}}" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen-to-square"></i>Edit</a>
-                                    <a th:href="@{'/admin/deleteProduct/'+${u.id}}" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i>Delete</a>
+                                    <a th:href="@{'/admin/updateSts?status=true&id='+${u.id}}" class="btn btn-sm btn-primary">Active</a>
+                                    <a th:href="@{'/admin/updateSts?status=false&id='+${u.id}}" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i>Inactive</a>
                                 </td>
 
                             </tr>

@@ -212,4 +212,15 @@ public class AdminController {
         m.addAttribute("users", users);
         return "/admin/users";
     }
+
+    @GetMapping("/updateSts")
+    public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id,  HttpSession session){
+        Boolean f = userService.updateAccountStatus(id, status);
+        if(f) {
+            session.setAttribute("succMsg", "Account Status Updated");
+        } else {
+            session.setAttribute("errorMsg", "Something wrong on server");
+        }
+        return "redirect:/admin/users";
+    }
 }
