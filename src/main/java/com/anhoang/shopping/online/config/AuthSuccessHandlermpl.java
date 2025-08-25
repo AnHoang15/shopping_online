@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Service
-public class AuthSuccessHanderImpl implements AuthenticationSuccessHandler {
+public class AuthSuccessHandlermpl implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

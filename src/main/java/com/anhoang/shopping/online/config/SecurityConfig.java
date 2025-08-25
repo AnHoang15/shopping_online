@@ -3,7 +3,9 @@ package com.anhoang.shopping.online.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +19,10 @@ public class SecurityConfig {
 
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
+
+    @Autowired
+    @Lazy
+    private AuthFailureHandlerImpl authenticationFailureHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,6 +55,7 @@ public class SecurityConfig {
                     .loginProcessingUrl("/login")
                     .usernameParameter("email")   // dùng "email" thay vì "username"
                     .passwordParameter("password")
+                        .failureHandler(authenticationFailureHandler)
                     .successHandler(authenticationSuccessHandler)
     )           .logout(logout->logout.permitAll());
         return http.build();
