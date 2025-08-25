@@ -38,8 +38,8 @@ public class AdminController {
     private UserService userService;
 
     @ModelAttribute
-    public void getUserDetails(Principal p, Model m){
-        if(p!= null){
+    public void getUserDetails(Principal p, Model m) {
+        if (p != null) {
             String email = p.getName();
             UserDtls userDtls = userService.getUserByEmail(email);
             m.addAttribute("user", userDtls);
@@ -49,36 +49,36 @@ public class AdminController {
     }
 
     @GetMapping("/")
-    public String index(){
+    public String index() {
         return "admin/index";
     }
 
     @GetMapping("/loadAddProduct")
-    public String loadAddProduct(Model m){
+    public String loadAddProduct(Model m) {
         List<Category> categories = categoryService.getAllCategory();
         m.addAttribute("categories", categories);
         return "admin/add_product";
     }
 
     @GetMapping("/category")
-    public String category(Model m ){
+    public String category(Model m) {
         m.addAttribute("categorys", categoryService.getAllCategory());
         return "admin/category";
     }
 
     @PostMapping("/saveCategory")
     public String saveCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file,
-                               HttpSession session) throws IOException {
+            HttpSession session) throws IOException {
         String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
         category.setImageName(imageName);
 
         Boolean existCategory = categoryService.existCategory(category.getName());
-        if(existCategory){
+        if (existCategory) {
             session.setAttribute("errorMsg", "Category Name already exists");
         } else {
             Category saveCategory = categoryService.saveCategory(category);
 
-            if (ObjectUtils.isEmpty(saveCategory)){
+            if (ObjectUtils.isEmpty(saveCategory)) {
                 session.setAttribute("errorMsg", "Not saved ! internal server error");
             } else {
                 File saveFile = new ClassPathResource("static/img").getFile();
@@ -109,23 +109,24 @@ public class AdminController {
     }
 
     @GetMapping("/loadEditCategory/{id}")
-    public String loadEditCategory(@PathVariable int id, Model m){
+    public String loadEditCategory(@PathVariable int id, Model m) {
         m.addAttribute("category", categoryService.getCategoryById(id));
         return "admin/edit_category";
     }
 
     @PostMapping("/updateCategory")
-    public String updateCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
+    public String updateCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file,
+            HttpSession session) throws IOException {
         Category oldCategory = categoryService.getCategoryById(category.getId());
         String imageName = file.isEmpty() ? oldCategory.getImageName() : file.getOriginalFilename();
-        if(!ObjectUtils.isEmpty(category)) {
+        if (!ObjectUtils.isEmpty(category)) {
             oldCategory.setName(category.getName());
             oldCategory.setIsActive(category.getIsActive());
             oldCategory.setImageName(imageName);
         }
         Category updateCategory = categoryService.saveCategory(oldCategory);
         if (!ObjectUtils.isEmpty(updateCategory)) {
-            if(!file.isEmpty()){
+            if (!file.isEmpty()) {
                 File saveFile = new ClassPathResource("static/img").getFile();
 
                 Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
@@ -143,12 +144,13 @@ public class AdminController {
     }
 
     @PostMapping("/saveProduct")
-    public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image, HttpSession session) throws IOException {
+    public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
+            HttpSession session) throws IOException {
         String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
         product.setImage(imageName);
         product.setDiscountPrice(product.getPrice());
         Product saveProduct = productService.saveProduct(product);
-        if(!ObjectUtils.isEmpty(saveProduct)){
+        if (!ObjectUtils.isEmpty(saveProduct)) {
             File saveFile = new ClassPathResource("static/img").getFile();
 
             Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
@@ -166,7 +168,7 @@ public class AdminController {
     }
 
     @GetMapping("/products")
-    public String loadViewProduct(Model m){
+    public String loadViewProduct(Model m) {
         m.addAttribute("products", productService.getAllProduct());
         return "admin/products";
     }
@@ -191,8 +193,9 @@ public class AdminController {
     }
 
     @PostMapping("/updateProduct")
-    public String updateProduct(@ModelAttribute Product product,@RequestParam("file") MultipartFile image, HttpSession session, Model m) {
-        if(product.getDiscount() < 0 || product.getDiscount() > 100){
+    public String updateProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
+            HttpSession session, Model m) {
+        if (product.getDiscount() < 0 || product.getDiscount() > 100) {
             session.setAttribute("errorMsg", "invalid Discount");
         } else {
             Product updateProduct = productService.updateProduct(product, image);
@@ -203,20 +206,20 @@ public class AdminController {
             }
         }
 
-        return "redirect:/admin/editProduct/" +product.getId();
+        return "redirect:/admin/editProduct/" + product.getId();
     }
 
     @GetMapping("/users")
-    public String getAllUsers(Model m){
+    public String getAllUsers(Model m) {
         List<UserDtls> users = userService.getUsers("ROLE_USER");
         m.addAttribute("users", users);
         return "/admin/users";
     }
 
     @GetMapping("/updateSts")
-    public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id,  HttpSession session){
+    public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id, HttpSession session) {
         Boolean f = userService.updateAccountStatus(id, status);
-        if(f) {
+        if (f) {
             session.setAttribute("succMsg", "Account Status Updated");
         } else {
             session.setAttribute("errorMsg", "Something wrong on server");

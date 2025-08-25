@@ -3,7 +3,6 @@ package com.anhoang.shopping.online.controller;
 import com.anhoang.shopping.online.model.Category;
 import com.anhoang.shopping.online.model.Product;
 import com.anhoang.shopping.online.model.UserDtls;
-import com.anhoang.shopping.online.respository.ProductResposity;
 import com.anhoang.shopping.online.service.CategoryService;
 import com.anhoang.shopping.online.service.ProductService;
 import com.anhoang.shopping.online.service.UserService;

@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDtls saveUser(UserDtls user) {
         user.setRole("ROLE_USER");
-        user.setEnable(true);
+        user.setIsEnable(true);
         user.setAccountNonLocked(true);
         user.setFailedAttempt(0);
         String encodePassword = passwordEncoder.encode(user.getPassword());
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserDtls> findByUser = userRespository.findById(id);
         if(findByUser.isPresent()){
             UserDtls userDtls = findByUser.get();
-            userDtls.setEnable(status);
+            userDtls.setIsEnable(status);
             userRespository.save(userDtls);
             return true;
         }
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void increaseFailedAttempt(UserDtls user) {
-        int attempt = user.getFailedAttempt();
+        int attempt = user.getFailedAttempt() + 1;
         user.setFailedAttempt(attempt);
         userRespository.save(user);
     }
