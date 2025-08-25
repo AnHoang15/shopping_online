@@ -105,5 +105,9 @@ public class HomeController {
         return "redirect:/register";
     }
 
-
+    //Forgot Password Code
+    @GetMapping("/forgot-password")
+    public String showForgotPassword(){
+        return "forgot_password.html";
+    }
 }
