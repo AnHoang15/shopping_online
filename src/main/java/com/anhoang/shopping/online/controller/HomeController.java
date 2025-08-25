@@ -63,6 +63,11 @@ public class HomeController {
         return "register";
     }
 
+    @GetMapping("/forgot-password")
+	public String showForgotPassword() {
+		return "forgot_password.html";
+	}
+
     @GetMapping("/products")
     public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category){
         //System.out.println("category=" + category);
@@ -105,8 +110,5 @@ public class HomeController {
     }
 
     //Forgot Password Code
-    @GetMapping("/forgot-password")
-    public String showForgotPassword(){
-        return "forgot_password.html";
-    }
+    
 }

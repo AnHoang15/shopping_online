@@ -28,7 +28,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new UserDetailServiceImpl();
     }
 
@@ -41,21 +41,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
-    {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf->csrf.disable()).cors(cors->cors.disable())
-                .authorizeHttpRequests(req->req
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/", "/signin", "/register", "/css/**", "/js/**", "/img/**").permitAll())
-                .formLogin(form -> form
-                    .loginPage("/signin")
-                    .loginProcessingUrl("/login")
-                    .failureHandler(authenticationFailureHandler)
-                    .successHandler(authenticationSuccessHandler)
-    )           .logout(logout->logout.permitAll());
-        return http.build();
+				.authorizeHttpRequests(req->req.requestMatchers("/user/**").hasRole("USER")
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.requestMatchers("/**").permitAll())
+				.formLogin(form->form.loginPage("/signin")
+						.loginProcessingUrl("/login")
+						.failureHandler(authenticationFailureHandler)
+						.successHandler(authenticationSuccessHandler))
+				.logout(logout->logout.permitAll());
+		
+		return http.build();
     }
 }
-
-

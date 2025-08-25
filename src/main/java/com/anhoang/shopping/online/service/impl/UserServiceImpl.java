@@ -5,7 +5,6 @@ import com.anhoang.shopping.online.respository.UserRespository;
 import com.anhoang.shopping.online.service.UserService;
 import com.anhoang.shopping.online.util.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
