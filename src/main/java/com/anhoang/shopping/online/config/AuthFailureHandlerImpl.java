@@ -4,11 +4,12 @@ import com.anhoang.shopping.online.model.UserDtls;
 import com.anhoang.shopping.online.respository.UserRespository;
 import com.anhoang.shopping.online.service.UserService;
 import com.anhoang.shopping.online.util.AppConstant;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.AuthenticationException;
 
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -26,13 +27,14 @@ public class AuthFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandle
     private UserService userService;
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException exception) throws IOException, ServletException {
 
         String email = request.getParameter("username");
 
         UserDtls userDtls = userRespository.findByEmail(email);
 
-        if (userDtls.isEnable()) {
+        if (userDtls.getIsEnable()) {
 
             if (userDtls.getAccountNonLocked()) {
 

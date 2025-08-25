@@ -1,7 +1,6 @@
 package com.anhoang.shopping.online.respository;
 
 import com.anhoang.shopping.online.model.Category;
-import jdk.dynalink.linker.LinkerServices;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
