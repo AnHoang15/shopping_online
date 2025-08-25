@@ -4,11 +4,11 @@ import com.anhoang.shopping.online.model.UserDtls;
 import com.anhoang.shopping.online.respository.UserRespository;
 import com.anhoang.shopping.online.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDtls saveUser(UserDtls user) {
         user.setRole("ROLE_USER");
-        user.setEnable(true);
+        user.setIsEnable(true);
         String encodePassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodePassword);
         UserDtls saveUser = userRespository.save(user);
@@ -38,5 +38,19 @@ public class UserServiceImpl implements UserService {
     public List<UserDtls> getUsers(String role){
         return userRespository.findByRole(role);
     }
+
+    @Override
+	public Boolean updateAccountStatus(Integer id, Boolean status) {
+		Optional<UserDtls> findByuser = userRespository.findById(id);
+
+		if (findByuser.isPresent()) {
+			UserDtls userDtls = findByuser.get();
+			userDtls.setIsEnable(status);
+			userRespository.save(userDtls);
+			return true;
+		}
+
+		return false;
+	}
 
 }
