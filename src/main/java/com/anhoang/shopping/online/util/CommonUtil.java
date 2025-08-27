@@ -1,5 +1,6 @@
 package com.anhoang.shopping.online.util;
 
+import com.anhoang.shopping.online.model.ProductOrder;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,5 +53,22 @@ public class CommonUtil {
         return url.toString();
     }
 
+
+
+    public Boolean sendMailForProductOrder(ProductOrder order){
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setFrom("daspabitra55@gmail.com", "Shopping Cart");
+        helper.setTo(order.getOrderAddress().getEmail());
+
+        String content = "<p>Hello,</p>" + "<p>You have requested to reset your password.</p>"
+                + "<p>Click the link below to change your password:</p>" + "<p><a href=\"" + url
+                + "\">Change my password</a></p>";
+
+        helper.setSubject("Password Reset");
+        helper.setText(content, true);
+        mailSender.send(message);
+        return true;
+    }
 
 }

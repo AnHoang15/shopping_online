@@ -2,11 +2,10 @@ package com.anhoang.shopping.online.controller;
 
 import com.anhoang.shopping.online.model.Category;
 import com.anhoang.shopping.online.model.Product;
+import com.anhoang.shopping.online.model.ProductOrder;
 import com.anhoang.shopping.online.model.UserDtls;
-import com.anhoang.shopping.online.service.CartService;
-import com.anhoang.shopping.online.service.CategoryService;
-import com.anhoang.shopping.online.service.ProductService;
-import com.anhoang.shopping.online.service.UserService;
+import com.anhoang.shopping.online.service.*;
+import com.anhoang.shopping.online.util.OrderStatus;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -40,6 +39,9 @@ public class AdminController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private OrderService orderService;
 
     @ModelAttribute
     public void getUserDetails(Principal p, Model m) {
@@ -232,4 +234,14 @@ public class AdminController {
         }
         return "redirect:/admin/users";
     }
+
+//    @GetMapping("/orders")
+//    public String getAllOrders(Model m){
+//        List<ProductOrder> allOrders = orderService.getAllOrders(m);
+//        m.addAttribute("orders", allOrders);
+//        return "/admin/orders";
+//    }
+
+
+
 }
