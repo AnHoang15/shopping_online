@@ -5,15 +5,14 @@ import com.anhoang.shopping.online.model.Category;
 import com.anhoang.shopping.online.model.ProductOrder;
 import com.anhoang.shopping.online.model.UserDtls;
 import com.anhoang.shopping.online.model.OrderRequest;
-
 import com.anhoang.shopping.online.service.CartService;
 import com.anhoang.shopping.online.service.CategoryService;
 import com.anhoang.shopping.online.service.OrderService;
 import com.anhoang.shopping.online.service.UserService;
 import com.anhoang.shopping.online.util.OrderStatus;
+import com.anhoang.shopping.online.util.CommonUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -38,6 +37,9 @@ public class UserController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @GetMapping("/")
     public String home(){
@@ -108,7 +110,7 @@ public class UserController {
     }
 
     @PostMapping("/save-order")
-    public String saveOrder(@ModelAttribute OrderRequest request, Principal p) {
+    public String saveOrder(@ModelAttribute OrderRequest request, Principal p) throws Exception {
         //System.out.println(request);
         UserDtls user = getLoggedInUserDetails(p);
         orderService.saveOrder(user.getId(), request);
@@ -138,14 +140,19 @@ public class UserController {
                 break;
             }
         }
-        Boolean updateOrder = orderService.updateOrderStatus(id, status);
-        if (updateOrder) {
-            session.setAttribute("succMsg", "Status Updated");
-        } else {
-            session.setAttribute("errorMsg", "Status not updated");
-        }
-        // 🔥 Redirect tới mapping chứ không phải view
-        return "redirect:/user/user-orders";
+        ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
+        try {
+			commonUtil.sendMailForProductOrder(updateOrder, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (!ObjectUtils.isEmpty(updateOrder)) {
+			session.setAttribute("succMsg", "Status Updated");
+		} else {
+			session.setAttribute("errorMsg", "status not updated");
+		}
+		return "redirect:/user/user-orders";
     }
 
 }

@@ -6,14 +6,13 @@ import com.anhoang.shopping.online.model.ProductOrder;
 import com.anhoang.shopping.online.respository.CartRespository;
 import com.anhoang.shopping.online.respository.ProductOrderRespository;
 import com.anhoang.shopping.online.service.OrderService;
+import com.anhoang.shopping.online.util.CommonUtil;
 import com.anhoang.shopping.online.util.OrderStatus;
 import com.anhoang.shopping.online.model.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,11 +26,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CartRespository cartRespository;
 
-
-
+    @Autowired
+	private CommonUtil commonUtil;
 
     @Override
-    public void saveOrder(Integer userId, OrderRequest orderRequest) {
+    public void saveOrder(Integer userId, OrderRequest orderRequest) throws Exception {
         List< Cart> carts = cartRespository.findByUserId(userId);
         for(Cart cart : carts) {
             ProductOrder order = new ProductOrder();
@@ -44,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(OrderStatus.IN_PROGRESS.getName());
             order.setPaymentType(orderRequest.getPaymentType());
             OrderAddress address = new OrderAddress();
-            address.setFirstname(orderRequest.getFirstName());
+            address.setFirstName(orderRequest.getFirstName());
             address.setLastName(orderRequest.getLastName());
             address.setEmail(orderRequest.getEmail());
             address.setMobileNo(orderRequest.getMobileNo());
@@ -55,7 +54,8 @@ public class OrderServiceImpl implements OrderService {
 
             order.setOrderAddress(address);
 
-            orderRespository.save(order);
+            ProductOrder saveOrder = orderRespository.save(order);
+			commonUtil.sendMailForProductOrder(saveOrder, "success");
         }
 
     }
@@ -64,26 +64,22 @@ public class OrderServiceImpl implements OrderService {
     public List<ProductOrder> getOrdersByUser(Integer userId) {
         List<ProductOrder> orders = orderRespository.findByUserId(userId);
         return orders;
-
     }
 
     @Override
-    public Boolean updateOrderStatus(Integer id, String status) {
-        Optional<ProductOrder> findById = orderRespository.findById(id);
-        if(findById.isPresent()) {
-            ProductOrder productOrder = findById.get();
-            productOrder.setStatus(status);
-            orderRespository.save(productOrder);
-            return true;
-        }
-        return false;
-    }
+	public ProductOrder updateOrderStatus(Integer id, String status) {
+		Optional<ProductOrder> findById = orderRespository.findById(id);
+		if (findById.isPresent()) {
+			ProductOrder productOrder = findById.get();
+			productOrder.setStatus(status);
+			ProductOrder updateOrder = orderRespository.save(productOrder);
+			return updateOrder;
+		}
+		return null;
+	}
 
     @Override
-    public List<ProductOrder> getAllOrders(Integer userId) {
-        List<ProductOrder> orders = orderRespository.findByUserId(userId);
-        return orders;
+    public List<ProductOrder> getAllOrders() {
+        return orderRespository.findAll();
     }
-
-
 }

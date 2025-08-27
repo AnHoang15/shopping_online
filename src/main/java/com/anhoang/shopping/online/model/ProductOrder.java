@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,12 +32,5 @@ public class ProductOrder {
 
     @OneToOne(cascade = CascadeType.ALL)
     private OrderAddress orderAddress;
-
-    public Double getTotalPrice() {
-        if (price == null || quantity == null) {
-            return 0.0;
-        }
-        return price * quantity;
-    }
 
 }
