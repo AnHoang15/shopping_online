@@ -98,7 +98,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDtls getUserByToken(String token) {
-        return userRespository.findBuResetToken(token);
+        return userRespository.findByResetToken(token);
+    }
+
+    @Override
+    public UserDtls updateUser(UserDtls user) {
+        return userRespository.save(user);
     }
 
 

@@ -3,6 +3,7 @@ package com.anhoang.shopping.online.controller;
 import com.anhoang.shopping.online.model.Category;
 import com.anhoang.shopping.online.model.Product;
 import com.anhoang.shopping.online.model.UserDtls;
+import com.anhoang.shopping.online.service.CartService;
 import com.anhoang.shopping.online.service.CategoryService;
 import com.anhoang.shopping.online.service.ProductService;
 import com.anhoang.shopping.online.service.UserService;
@@ -37,12 +38,17 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CartService cartService;
+
     @ModelAttribute
     public void getUserDetails(Principal p, Model m) {
         if (p != null) {
             String email = p.getName();
             UserDtls userDtls = userService.getUserByEmail(email);
             m.addAttribute("user", userDtls);
+            Integer countCart = cartService.getCountCart(userDtls.getId());
+            m.addAttribute("countCart", countCart);
         }
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
         m.addAttribute("categories", allActiveCategory);

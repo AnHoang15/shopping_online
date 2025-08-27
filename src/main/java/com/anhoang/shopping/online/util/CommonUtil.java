@@ -20,7 +20,7 @@ public class CommonUtil {
     public Boolean sendMail(String url, String recipientEmail) throws UnsupportedEncodingException, MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("daspabitra55@gmail.com", "Shooping Cart");
+        helper.setFrom("daspabitra55@gmail.com", "Shopping Cart");
         helper.setTo(recipientEmail);
 
         String content = "<p>Hello,</p>" + "<p>You have requested to reset your password.</p>"
@@ -33,8 +33,24 @@ public class CommonUtil {
     }
 
     public static String generateUrl(HttpServletRequest request) {
-        String siteUrl =  request.getRequestURI().toString();
-        return siteUrl.replace(request.getServletPath(), "");
+        String scheme = request.getScheme();             // http hoặc https
+        String serverName = request.getServerName();     // localhost hoặc domain
+        int serverPort = request.getServerPort();        // 8080, 80, 443
+        String contextPath = request.getContextPath();   // /project nếu có
+
+        StringBuilder url = new StringBuilder();
+        url.append(scheme).append("://").append(serverName);
+
+        // chỉ thêm port nếu không phải port mặc định
+        if ((scheme.equals("http") && serverPort != 80) ||
+                (scheme.equals("https") && serverPort != 443)) {
+            url.append(":").append(serverPort);
+        }
+
+        url.append(contextPath);
+
+        return url.toString();
     }
+
 
 }
