@@ -1,61 +1,58 @@
 package com.anhoang.shopping.online.util;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import com.anhoang.shopping.online.model.ProductOrder;
+import com.anhoang.shopping.online.model.UserDtls;
+import com.anhoang.shopping.online.service.UserService;
 
-import java.io.UnsupportedEncodingException;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class CommonUtil {
 
-    @Autowired
-    private JavaMailSender mailSender;
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	@Autowired
+	private UserService userService;
 
-    public Boolean sendMail(String url, String recipientEmail) throws UnsupportedEncodingException, MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("daspabitra55@gmail.com", "Shopping Cart");
-        helper.setTo(recipientEmail);
+	public Boolean sendMail(String url, String reciepentEmail) throws UnsupportedEncodingException, MessagingException {
 
-        String content = "<p>Hello,</p>" + "<p>You have requested to reset your password.</p>"
-                + "<p>Click the link below to change your password:</p>" + "<p><a href=\"" + url
-                + "\">Change my password</a></p>";
-        helper.setSubject("Password Reset");
-        helper.setText(content, true);
-        mailSender.send(message);
-        return true;
-    }
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
 
-    public static String generateUrl(HttpServletRequest request) {
-        String scheme = request.getScheme();             // http hoặc https
-        String serverName = request.getServerName();     // localhost hoặc domain
-        int serverPort = request.getServerPort();        // 8080, 80, 443
-        String contextPath = request.getContextPath();   // /project nếu có
+		helper.setFrom("daspabitra55@gmail.com", "Shooping Cart");
+		helper.setTo(reciepentEmail);
 
-        StringBuilder url = new StringBuilder();
-        url.append(scheme).append("://").append(serverName);
+		String content = "<p>Hello,</p>" + "<p>You have requested to reset your password.</p>"
+				+ "<p>Click the link below to change your password:</p>" + "<p><a href=\"" + url
+				+ "\">Change my password</a></p>";
+		helper.setSubject("Password Reset");
+		helper.setText(content, true);
+		mailSender.send(message);
+		return true;
+	}
 
-        // chỉ thêm port nếu không phải port mặc định
-        if ((scheme.equals("http") && serverPort != 80) ||
-                (scheme.equals("https") && serverPort != 443)) {
-            url.append(":").append(serverPort);
-        }
+	public static String generateUrl(HttpServletRequest request) {
 
-        url.append(contextPath);
+		// http://localhost:8080/forgot-password
+		String siteUrl = request.getRequestURL().toString();
 
-        return url.toString();
-    }
-
-    String msg=null;;
-
-    public Boolean sendMailForProductOrder(ProductOrder order,String status) throws Exception
+		return siteUrl.replace(request.getServletPath(), "");
+	}
+	
+	String msg=null;;
+	
+	public Boolean sendMailForProductOrder(ProductOrder order,String status) throws Exception
 	{
 		
 		msg="<p>Hello [[name]],</p>"
@@ -85,5 +82,11 @@ public class CommonUtil {
 		helper.setText(msg, true);
 		mailSender.send(message);
 		return true;
+	}
+	
+	public UserDtls getLoggedInUserDetails(Principal p) {
+		String email = p.getName();
+		UserDtls userDtls = userService.getUserByEmail(email);
+		return userDtls;
 	}
 }
