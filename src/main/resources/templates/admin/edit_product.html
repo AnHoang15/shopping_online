@@ -20,14 +20,14 @@
                 <th:block th:if="${session.succMsg}">
                   <p class="text-success fw-bold">[[${session.succMsg}]]</p>
                   <th:block
-                    th:text="${@commnServiceImpl.removeSessionMessage()}"
+                    th:text="${@commonServiceImpl.removeSessionMessage()}"
                   ></th:block>
                 </th:block>
 
                 <th:block th:if="${session.errorMsg}">
                   <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
                   <th:block
-                    th:text="${@commnServiceImpl.removeSessionMessage()}"
+                    th:text="${@commonServiceImpl.removeSessionMessage()}"
                   ></th:block>
                 </th:block>
               </div>
@@ -54,10 +54,7 @@
                       rows="3"
                       cols=""
                       class="form-control"
-                      name="description"
-                    >
-[[${product.description}]]</textarea
-                    >
+                      name="description">[[${product.description}]]</textarea>
                   </div>
                   <div class="row">
                     <div class="mb-3 col">
@@ -73,8 +70,7 @@
                         type="number"
                         name="price"
                         th:value="${product.price}"
-                        class="form-control"
-                      />
+                        class="form-control"/>
                     </div>
                   </div>
 
@@ -85,8 +81,7 @@
                         type="number"
                         name="discount"
                         th:value="${product.discount}"
-                        class="form-control"
-                      />
+                        class="form-control"/>
                     </div>
                     <div class="mb-3 col">
                       <label>Discount Price</label>
