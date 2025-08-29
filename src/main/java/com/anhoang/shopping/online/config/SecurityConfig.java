@@ -17,11 +17,11 @@ public class SecurityConfig {
 
 	@Autowired
 	private AuthenticationSuccessHandler authenticationSuccessHandler;
-	
+
 	@Autowired
 	@Lazy
 	private AuthFailureHandlerImpl authenticationFailureHandler;
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -41,19 +41,30 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
-	{
-		http.csrf(csrf->csrf.disable()).cors(cors->cors.disable())
-				.authorizeHttpRequests(req->req.requestMatchers("/user/**").hasRole("USER")
-				.requestMatchers("/admin/**").hasRole("ADMIN")
-				.requestMatchers("/**").permitAll())
-				.formLogin(form->form.loginPage("/signin")
-						.loginProcessingUrl("/login")
-						.failureHandler(authenticationFailureHandler)
-						.successHandler(authenticationSuccessHandler))
-				.logout(logout->logout.permitAll());
-		
-		return http.build();
-	}
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.disable())
+            // Cho phép iframe để H2 Console hoạt động
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+            // Cấu hình quyền truy cập
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/h2-console/**").permitAll()   // Cho H2 Console
+                .requestMatchers("/user/**").hasRole("USER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().permitAll()
+            )
+            // Cấu hình form login
+            .formLogin(form -> form
+                .loginPage("/signin")
+                .loginProcessingUrl("/login")
+                .failureHandler(authenticationFailureHandler)
+                .successHandler(authenticationSuccessHandler)
+                .permitAll()
+            )
+            // Cấu hình logout
+            .logout(logout -> logout.permitAll());
+
+        return http.build();
+    }
 
 }

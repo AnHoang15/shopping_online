@@ -270,3 +270,4 @@ jQuery.validator.addMethod('lettersonly', function(value, element) {
 	jQuery.validator.addMethod('numericOnly', function(value, element) {
 		return /^[0-9]+$/.test(value);
 	});
+});
