@@ -131,9 +131,9 @@
 									<td>[[${o.orderDate}]]</td>
 									<td>[[${o.product.title}]]</td>
 									<td>Quantity : [[${o.quantity}]] <br>Price :
-										[[${o.price}]] <br>Total Price :[[${o.quantity *
-										o.price}]]
-									</td>
+										[[${o.price}]] <br>Total Price :[[${o.totalPrice}]]
+
+                                    </td>
 									<td>[[${o.status}]]</td>
 									<td>
 										<form action="/admin/update-order-status" method="post">

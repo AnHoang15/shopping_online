@@ -2,13 +2,7 @@ package com.anhoang.shopping.online.model;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +33,12 @@ public class ProductOrder {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private OrderAddress orderAddress;
+
+    @Transient
+    public Double getTotalPrice() {
+        if (price == null || quantity == null) return 0.0;
+        return price * quantity;
+    }
+
 
 }

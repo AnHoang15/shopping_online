@@ -225,46 +225,32 @@ $orders.validate({
 })
 
 // Reset Password Validation
-
-var $resetPassword=$("#resetPassword");
+var $resetPassword = $("#resetPassword");
 
 $resetPassword.validate({
-		
-		rules:{
-			password: {
-				required: true,
-				space: true
-
-			},
-			confirmPassword: {
-				required: true,
-				space: true,
-				equalTo: '#pass'
-
-			}
-		},
-		messages:{
-		   password: {
-				required: 'password must be required',
-				space: 'space not allowed'
-
-			},
-			confirmpassword: {
-				required: 'confirm password must be required',
-				space: 'space not allowed',
-				equalTo: 'password mismatch'
-
-			}
-		}	
-})
-
-
-
-	
-	
-	
-	
-})
+  rules: {
+    password: {
+      required: true,
+      space: true
+    },
+    confirmPassword: {
+      required: true,
+      space: true,
+      equalTo: '#newPassword' // <-- trỏ đúng ID của ô mật khẩu
+    }
+  },
+  messages: {
+    password: {
+      required: 'password must be required',
+      space: 'space not allowed'
+    },
+    confirmPassword: {        // <-- đúng key (camelCase)
+      required: 'confirm password must be required',
+      space: 'space not allowed',
+      equalTo: 'password mismatch'
+    }
+  }
+});
 
 
 

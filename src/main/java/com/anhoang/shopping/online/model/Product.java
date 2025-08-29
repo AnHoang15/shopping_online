@@ -32,6 +32,7 @@ public class Product {
 	private int stock;
 	private String image;
 	private int discount;
-	private Double discountPrice;
-	private Boolean isActive;
+    private Double discountPrice = 0.0;
+
+    private Boolean isActive;
 }

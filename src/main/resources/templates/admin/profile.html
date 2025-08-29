@@ -19,8 +19,8 @@
                 [[${session.succMsg}]]
               </p>
               <th:block
-                th:text="${@commnServiceImpl.removeSessionMessage()}"
-              ></th:block>
+                th:text="${@commonServiceImpl.removeSessionMessage()}">
+              </th:block>
             </th:block>
 
             <th:block th:if="${session.errorMsg}">
@@ -28,8 +28,7 @@
                 [[${session.errorMsg}]]
               </p>
               <th:block
-                th:text="${@commnServiceImpl.removeSessionMessage()}"
-              ></th:block>
+                th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
             </th:block>
             <hr />
             <div class="text-center">
