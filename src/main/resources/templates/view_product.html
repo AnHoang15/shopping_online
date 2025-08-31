@@ -124,7 +124,12 @@
                             </div>
                         </li>
                     </ul>
+                    <small class="text-muted">
+                        Ngày đánh giá:
+                        <span th:text="${#temporals.format(rev.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                    </small>
                 </div>
+
 
                 <div th:if="${#lists.isEmpty(reviews)}">
                     <p class="text-muted">No reviews yet. Be the first one!</p>

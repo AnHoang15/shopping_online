@@ -9,6 +9,7 @@ import com.anhoang.shopping.online.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,6 +25,8 @@ public class ReviewServiceImpl implements ReviewService {
         review.setUser(user);
         review.setRating(rating);
         review.setComment(comment);
+        review.setCreatedAt(LocalDateTime.now());
+
         return reviewRepository.save(review);
     }
 
