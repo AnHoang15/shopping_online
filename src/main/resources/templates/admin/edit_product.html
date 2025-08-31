@@ -2,8 +2,7 @@
 <html
   lang="en"
   xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{base::layout(~{::section})}"
->
+  th:replace="~{base::layout(~{::section})}">
   <head>
     <meta charset="ISO-8859-1" />
     <title>Insert title here</title>
@@ -20,23 +19,20 @@
                 <th:block th:if="${session.succMsg}">
                   <p class="text-success fw-bold">[[${session.succMsg}]]</p>
                   <th:block
-                    th:text="${@commonServiceImpl.removeSessionMessage()}"
-                  ></th:block>
+                    th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
                 </th:block>
 
                 <th:block th:if="${session.errorMsg}">
                   <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
                   <th:block
-                    th:text="${@commonServiceImpl.removeSessionMessage()}"
-                  ></th:block>
+                    th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
                 </th:block>
               </div>
               <div class="card-body">
                 <form
                   action="/admin/updateProduct"
                   method="post"
-                  enctype="multipart/form-data"
-                >
+                  enctype="multipart/form-data">
                   <input type="hidden" name="id" th:value="${product.id}" />
                   <div class="mb-3">
                     <label>Enter Title</label>
@@ -44,8 +40,7 @@
                       type="text"
                       name="title"
                       th:value="${product.title}"
-                      class="form-control"
-                    />
+                      class="form-control"/>
                   </div>
 
                   <div class="mb-3">
@@ -89,8 +84,7 @@
                         type="number"
                         readonly
                         th:value="${product.discountPrice}"
-                        class="form-control"
-                      />
+                        class="form-control"/>
                     </div>
                   </div>
 
@@ -104,8 +98,7 @@
                         th:checked="${product.isActive==true}"
                         value="true"
                         name="isActive"
-                        id="flexRadioDefault1"
-                      />
+                        id="flexRadioDefault1"/>
                       <label class="form-check-label" for="flexRadioDefault1">
                         Active
                       </label>
@@ -117,8 +110,7 @@
                         name="isActive"
                         th:checked="${product.isActive==false}"
                         value="false"
-                        id="flexRadioDefault2"
-                      />
+                        id="flexRadioDefault2"/>
                       <label class="form-check-label" for="flexRadioDefault2">
                         Inactive
                       </label>
@@ -132,8 +124,7 @@
                         type="text"
                         name="stock"
                         th:value="${product.stock}"
-                        class="form-control"
-                      />
+                        class="form-control"/>
                     </div>
 
                     <div class="mb-3 col">
@@ -145,8 +136,7 @@
                       <img
                         th:src="@{'/img/product_img/'+${product.image}}"
                         width="100px"
-                        height="100px"
-                      />
+                        height="100px"/>
                     </div>
                   </div>
                   <button class="btn btn-primary col-md-12">Update</button>

@@ -1,124 +1,177 @@
 <!DOCTYPE html>
-<html
-  lang="en"
-  xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{base::layout(~{::section})}"
->
-  <head>
-    <meta charset="ISO-8859-1" />
-    <title>Insert title here</title>
-  </head>
-  <body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Product Details</title>
+</head>
+<body>
     <section>
-      <div
-        class="container card-sh"
-        style="margin-top: 70px; margin-bottom: 100px"
-      >
-        <div class="col-md-12 p-5">
-          <div class="row">
-            <th:block th:if="${session.succMsg}">
-              <p
-                class="text-success alert alert-success text-center"
-                role="alert"
-              >
-                [[${session.succMsg}]]
-              </p>
-              <th:block
-                th:text="${@commonServiceImpl.removeSessionMessage()}"
-              ></th:block>
-            </th:block>
+        <div class="container card-sh" style="margin-top:70px; margin-bottom:100px">
+            <div class="col-md-12 p-5">
+                <div class="row">
 
-            <th:block th:if="${session.errorMsg}">
-              <p class="text-danger text-center alert alert-danger">
-                [[${session.errorMsg}]]
-              </p>
-              <th:block
-                th:text="${@commonServiceImpl.removeSessionMessage()}"
-              ></th:block>
-            </th:block>
-            <div class="col-md-6 text-end">
-              <img
-                alt=""
-                src="/img/product_img/laptop.jpg"
-                width="330px"
-                height="400px"
-              />
+                    <!-- Hiển thị thông báo -->
+                    <th:block th:if="${session.succMsg}">
+                        <p class="text-success alert alert-success text-center">
+                            [[${session.succMsg}]]
+                        </p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <th:block th:if="${session.errorMsg}">
+                        <p class="text-danger alert alert-danger text-center">
+                            [[${session.errorMsg}]]
+                        </p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <!-- Ảnh sản phẩm -->
+                    <div class="col-md-6 text-end">
+                        <img th:src="@{'/img/product_img/' + ${product.image}}"
+                             alt="Product Image"
+                             width="330" height="400"/>
+                    </div>
+
+                    <!-- Thông tin sản phẩm -->
+                    <div class="col-md-6">
+                        <p class="fs-3">[[${product.title}]]</p>
+                        <p><span class="fw-bold">Description: </span><br/>[[${product.description}]]</p>
+                        <p>
+                            <span class="fw-bold">Details:</span><br/>
+                            Status:
+                            <th:block th:if="${product.stock > 0}">
+                                <span class="badge bg-success">Available</span>
+                            </th:block>
+                            <th:block th:unless="${product.stock > 0}">
+                                <span class="badge bg-warning">Out of Stock</span>
+                            </th:block>
+                            <br/>
+                            Category: [[${product.category}]]<br/>
+                            Policy: 7 Days Replacement & Return <br/>
+                            <!-- ⭐ Thêm đánh giá trung bình -->
+                            <span class="fw-bold">Rating:</span>
+                            <span th:if="${avgRating > 0}"
+                                  th:text="${#numbers.formatDecimal(avgRating,1,1)} + ' ★ (' + ${reviewCount} + ')'"></span>
+                            <span th:if="${avgRating == 0}">Chưa có đánh giá</span>
+<!--                        <p>-->
+<!--                            DEBUG: avgRating=-->
+<!--                            <span th:text="${avgRating}">0</span>,-->
+<!--                            reviewCount=-->
+<!--                            <span th:text="${reviewCount}">0</span>-->
+<!--                        </p>-->
+
+
+<!--                        &lt;!&ndash; debug tạm thời — xong bỏ đi &ndash;&gt;-->
+<!--                            <div style="color:darkred;">-->
+<!--                                <small th:text="'DEBUG: avgRating=' + ${avgRating} + ', reviewCount=' + ${reviewCount}"></small>-->
+<!--                            </div>-->
+
+                        </p>
+                        <p class="fs-5 fw-bold">
+                            Price: <i class="fas fa-rupee-sign"></i> [[${product.discountPrice}]]
+                            <span class="fs-6 text-decoration-line-through text-secondary">
+                                [[${product.price}]]
+                            </span>
+                            <span class="fs-6 text-success">[[${product.discount}]]% off</span>
+                        </p>
+
+                        <!-- Add to Cart -->
+                        <th:block th:if="${product.stock > 0}">
+                            <th:block th:if="${user == null}">
+                                <a href="/signin" class="btn btn-danger col-md-12">Add To Cart</a>
+                            </th:block>
+                            <th:block th:unless="${user == null}">
+                                <a th:href="@{'/user/addCart?pid=' + ${product.id} + '&uid=' + ${user.id}}"
+                                   class="btn btn-danger col-md-12">Add To Cart</a>
+                            </th:block>
+                        </th:block>
+                        <th:block th:unless="${product.stock > 0}">
+                            <a href="#" class="btn btn-warning text-white col-md-12">Out of Stock</a>
+                        </th:block>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-6">
-              <p class="fs-3">[[${product.title}]]</p>
-              <p>
-                <span class="fw-bold">Description : </span
-                ><br />[[${product.description}]]
-              </p>
-              <p>
-                <span class="fw-bold"> Product Details: </span> <br />
-                Status :
-                <th:block th:if="${product.stock>0}">
-                  <span class="badge bg-success">Available</span>
+            <!-- ================= Review & Comment Section ================= -->
+            <div class="card mt-4 p-4">
+                <h4>Customer Reviews</h4>
+
+                <!-- Nếu chưa đăng nhập -->
+                <th:block th:if="${user == null}">
+                    <p class="text-muted">
+                        <a href="/signin">Login</a> to write a review.
+                    </p>
                 </th:block>
 
-                <th:block th:unless="${product.stock>0}">
-                  <span class="badge bg-warning">out of stock</span>
-                </th:block>
+                <button id="toggleBtn" type="button" class="btn btn-link p-0 mb-3" onclick="toggleReviews()">
+                    Xem chi tiết đánh giá
+                </button>
 
-                <br />
-                Category: [[${product.category}]]<br />
-                Policy : 7 Days Replacement & Return
-              </p>
-              <p class="fs-5 fw-bold">
-                Price :&nbsp; &nbsp; &nbsp; &nbsp;<i
-                  class="fas fa-rupee-sign"
-                ></i>
-                [[${product.discountPrice}]]
-                <span class="fs-6 text-decoration-line-through text-secondary"
-                  >[[${product.price}]]</span
-                >
-                <span class="fs-6 text-success"
-                  >[[${product.discount}]]% off</span
-                >
-              </p>
-
-              <div class="row">
-                <div class="col-md-4 text-success text-center p-2">
-                  <i class="fas fa-money-bill-wave fa-2x"></i>
-                  <p>Cash On Delivery</p>
+                <!-- khối review ẩn mặc định -->
+                <div id="reviews-container" style="display:none;">
+                    <ul>
+                        <li th:each="r : ${reviews}" class="mb-3">
+                            <b th:text="${r.user.name}">User</b> -
+                            <span th:text="${r.rating} + '★'"></span>
+                            <p th:text="${r.comment}"></p>
+                            <div th:if="${user != null and (r.user.id == user.id or user.role == 'ROLE_ADMIN')}">
+                                <form th:action="@{'/review/delete/' + ${r.id}}" method="post"
+                                      onsubmit="return confirm('Bạn có chắc muốn xóa review này không?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-md-4 text-danger text-center p-2">
-                  <i class="fas fa-undo-alt fa-2x"></i>
-                  <p>Return Available</p>
+
+                <div th:if="${#lists.isEmpty(reviews)}">
+                    <p class="text-muted">No reviews yet. Be the first one!</p>
                 </div>
-                <div class="col-md-4 text-primary text-center p-2">
-                  <i class="fas fa-truck-moving fa-2x"></i>
-                  <p>Free Shipping</p>
+
+                <!-- Form thêm review -->
+                <div th:if="${user != null}">
+                    <h5>Write a Review</h5>
+                    <form th:action="@{'/review/add/' + ${product.id}}" method="post">
+                        <div class="mb-2">
+                            <label for="rating">Rating:</label>
+                            <select id="rating" name="rating" class="form-select">
+                                <option value="5">★★★★★ (5)</option>
+                                <option value="4">★★★★ (4)</option>
+                                <option value="3">★★★ (3)</option>
+                                <option value="2">★★ (2)</option>
+                                <option value="1">★ (1)</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="comment">Comment:</label>
+                            <textarea id="comment" name="comment" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
                 </div>
-              </div>
-
-              <th:block th:if="${product.stock>0}">
-                <th:block th:if="${user==null}">
-                  <a href="/signin" class="btn btn-danger col-md-12"
-                    >Add To Cart</a
-                  >
-                </th:block>
-
-                <th:block th:unless="${user==null}">
-                  <a
-                    th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
-                    class="btn btn-danger col-md-12"
-                    >Add To Cart</a
-                  >
-                </th:block>
-              </th:block>
-
-              <th:block th:unless="${product.stock>0}">
-                <a href="#" class="btn text-white btn-warning col-md-12"
-                  >Out of Stock</a
-                >
-              </th:block>
             </div>
-          </div>
         </div>
-      </div>
+        <!-- nút -->
+
+
+        <script>
+            function toggleReviews() {
+              var container = document.getElementById("reviews-container");
+              var btn = document.getElementById("toggleBtn");
+              if (container.style.display === "none") {
+                container.style.display = "block";
+                btn.innerText = "Ẩn đánh giá";
+              } else {
+                container.style.display = "none";
+                btn.innerText = "Xem chi tiết đánh giá";
+              }
+            }
+        </script>
+
     </section>
-  </body>
+
+
+</body>
 </html>

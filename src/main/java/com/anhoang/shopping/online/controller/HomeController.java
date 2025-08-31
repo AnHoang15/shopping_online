@@ -11,6 +11,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
+import com.anhoang.shopping.online.model.Review;
+import com.anhoang.shopping.online.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -28,10 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.anhoang.shopping.online.model.Category;
 import com.anhoang.shopping.online.model.Product;
 import com.anhoang.shopping.online.model.UserDtls;
-import com.anhoang.shopping.online.service.CartService;
-import com.anhoang.shopping.online.service.CategoryService;
-import com.anhoang.shopping.online.service.ProductService;
-import com.anhoang.shopping.online.service.UserService;
 import com.anhoang.shopping.online.util.CommonUtil;
 
 import io.micrometer.common.util.StringUtils;
@@ -59,6 +57,9 @@ public class HomeController {
 
 	@Autowired
 	private CartService cartService;
+
+    @Autowired
+    private ReviewService reviewService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -129,14 +130,30 @@ public class HomeController {
 		return "product";
 	}
 
-	@GetMapping("/product/{id}")
-	public String product(@PathVariable int id, Model m) {
-		Product productById = productService.getProductById(id);
-		m.addAttribute("product", productById);
-		return "view_product";
-	}
+    @GetMapping("/product/{id}")
+    public String product(@PathVariable int id, Model m, Principal principal) {
+        // Lấy sản phẩm
+        Product productById = productService.getProductById(id);
 
-	@PostMapping("/saveUser")
+        // Lấy danh sách review của sản phẩm
+        List<Review> reviews = reviewService.getReviewsByProduct(productById);
+
+        // Truyền dữ liệu sang view
+        m.addAttribute("product", productById);
+        m.addAttribute("reviews", reviews);
+
+        // Nếu có user đang đăng nhập thì truyền thêm vào model
+        if (principal != null) {
+            UserDtls user = userService.getUserByEmail(principal.getName());
+            m.addAttribute("user", user);
+        }
+
+        // Trả về view hiển thị chi tiết sản phẩm
+        return "view_product";
+    }
+
+
+    @PostMapping("/saveUser")
 	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
 			throws IOException {
 
