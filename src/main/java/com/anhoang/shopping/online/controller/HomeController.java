@@ -11,7 +11,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import com.anhoang.shopping.online.model.Review;
 import com.anhoang.shopping.online.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -22,7 +21,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,9 +55,6 @@ public class HomeController {
 
 	@Autowired
 	private CartService cartService;
-
-    @Autowired
-    private ReviewService reviewService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m) {
@@ -107,8 +102,8 @@ public class HomeController {
 		m.addAttribute("paramValue", category);
 		m.addAttribute("categories", categories);
 
-//		List<Product> products = productService.getAllActiveProducts(category);
-//		m.addAttribute("products", products);
+		// List<Product> products = productService.getAllActiveProducts(category);
+		// m.addAttribute("products", products);
 		Page<Product> page = null;
 		if (StringUtils.isEmpty(ch)) {
 			page = productService.getAllActiveProductPagination(pageNo, pageSize, category);
@@ -130,30 +125,7 @@ public class HomeController {
 		return "product";
 	}
 
-    @GetMapping("/product/{id}")
-    public String product(@PathVariable int id, Model m, Principal principal) {
-        // Lấy sản phẩm
-        Product productById = productService.getProductById(id);
-
-        // Lấy danh sách review của sản phẩm
-        List<Review> reviews = reviewService.getReviewsByProduct(productById);
-
-        // Truyền dữ liệu sang view
-        m.addAttribute("product", productById);
-        m.addAttribute("reviews", reviews);
-
-        // Nếu có user đang đăng nhập thì truyền thêm vào model
-        if (principal != null) {
-            UserDtls user = userService.getUserByEmail(principal.getName());
-            m.addAttribute("user", user);
-        }
-
-        // Trả về view hiển thị chi tiết sản phẩm
-        return "view_product";
-    }
-
-
-    @PostMapping("/saveUser")
+	@PostMapping("/saveUser")
 	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
 			throws IOException {
 
@@ -173,7 +145,7 @@ public class HomeController {
 					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
 							+ file.getOriginalFilename());
 
-//					System.out.println(path);
+					// System.out.println(path);
 					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 				}
 				session.setAttribute("succMsg", "Register successfully");
@@ -185,7 +157,7 @@ public class HomeController {
 		return "redirect:/register";
 	}
 
-//	Forgot Password Code 
+	// Forgot Password Code
 
 	@GetMapping("/forgot-password")
 	public String showForgotPassword() {
@@ -264,5 +236,4 @@ public class HomeController {
 		return "product";
 
 	}
-
 }

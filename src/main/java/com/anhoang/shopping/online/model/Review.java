@@ -1,6 +1,8 @@
 package com.anhoang.shopping.online.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,31 +11,30 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-//@NoArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@Table(name = "reviews")
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;                 // <-- dùng Long nhất quán
 
-    private int rating; // từ 1-5 sao
+    @Min(1) @Max(5)
+    private int rating;              // 1..5
+
+    @Column(columnDefinition = "TEXT")
     private String comment;
-    private LocalDateTime createdAt;
 
-    @ManyToOne
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserDtls user;  // ai viết review
+    private UserDtls user;           // ai viết review
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product product;  // review cho sản phẩm nào
-
-    // getters & setters
-    public Review() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    // getter setter ...
+    private Product product;         // review của sản phẩm nào
 }

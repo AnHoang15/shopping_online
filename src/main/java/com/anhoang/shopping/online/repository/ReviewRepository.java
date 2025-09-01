@@ -1,11 +1,13 @@
 package com.anhoang.shopping.online.repository;
 
-import com.anhoang.shopping.online.model.Review;
 import com.anhoang.shopping.online.model.Product;
+import com.anhoang.shopping.online.model.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-public interface ReviewRespository extends JpaRepository<Review, Integer> {
+@Repository
+public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByProduct(Product product);
-
 }

@@ -3,20 +3,18 @@ package com.anhoang.shopping.online.service.impl;
 import com.anhoang.shopping.online.model.Product;
 import com.anhoang.shopping.online.model.Review;
 import com.anhoang.shopping.online.model.UserDtls;
-import com.anhoang.shopping.online.repository.ReviewRespository;
-import com.anhoang.shopping.online.repository.ReviewRespository;
+import com.anhoang.shopping.online.repository.ReviewRepository;
 import com.anhoang.shopping.online.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
-    private ReviewRespository reviewRepository;
+    private ReviewRepository reviewRepository;
 
     @Override
     public Review addReview(Product product, UserDtls user, int rating, String comment) {
@@ -25,8 +23,6 @@ public class ReviewServiceImpl implements ReviewService {
         review.setUser(user);
         review.setRating(rating);
         review.setComment(comment);
-        review.setCreatedAt(LocalDateTime.now());
-
         return reviewRepository.save(review);
     }
 
@@ -35,16 +31,13 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.findByProduct(product);
     }
 
-
     @Override
-    public void deleteReview(Integer reviewId) {
+    public void deleteReview(Long reviewId) {       // <-- Long
         reviewRepository.deleteById(reviewId);
     }
 
     @Override
-    public Review getReviewById(Integer reviewId) {
-        return reviewRepository.findById(reviewId)
-                .orElse(null);
+    public Review getReviewById(Long reviewId) {    // <-- Long
+        return reviewRepository.findById(reviewId).orElse(null);
     }
-
 }
