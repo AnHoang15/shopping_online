@@ -142,12 +142,21 @@ public class HomeController {
 				if (!file.isEmpty()) {
 					File saveFile = new ClassPathResource("static/img").getFile();
 
-					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
-							+ file.getOriginalFilename());
+					File profileDir = new File(saveFile, "profile_img");
+					if (!profileDir.exists()) {
+						profileDir.mkdirs();
+					}
 
-					// System.out.println(path);
+					String uniqueFileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+					Path path = Paths.get(profileDir.getAbsolutePath(), uniqueFileName);
+
 					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+					// cập nhật lại tên ảnh trong user (để DB khớp)
+					saveUser.setProfileImage(uniqueFileName);
+					userService.updateUser(saveUser);
 				}
+
 				session.setAttribute("succMsg", "Register successfully");
 			} else {
 				session.setAttribute("errorMsg", "something wrong on server");

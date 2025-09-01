@@ -10,32 +10,49 @@
   </head>
   <body>
     <section>
-      <div class="container card-sh" style="margin-top: 70px; margin-bottom: 100px">
+      <div
+        class="container card-sh"
+        style="margin-top: 70px; margin-bottom: 100px"
+      >
         <div class="col-md-12 p-5">
           <div class="row">
             <!-- Thông báo -->
             <th:block th:if="${session.succMsg}">
-              <p class="text-success alert alert-success text-center">[[${session.succMsg}]]</p>
-              <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+              <p class="text-success alert alert-success text-center">
+                [[${session.succMsg}]]
+              </p>
+              <th:block
+                th:text="${@commonServiceImpl.removeSessionMessage()}"
+              ></th:block>
             </th:block>
             <th:block th:if="${session.errorMsg}">
-              <p class="text-danger alert alert-danger text-center">[[${session.errorMsg}]]</p>
-              <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+              <p class="text-danger alert alert-danger text-center">
+                [[${session.errorMsg}]]
+              </p>
+              <th:block
+                th:text="${@commonServiceImpl.removeSessionMessage()}"
+              ></th:block>
             </th:block>
 
             <!-- Ảnh -->
-            <div class="col-md-6 text-end">
-              <img th:src="@{'/img/product_img/' + ${product.image}}" alt="Product Image" width="330" height="400"/>
+            <div class="col-md-6 d-flex justify-content-center">
+              <img
+                th:src="@{'/img/product_img/' + ${product.image}}"
+                alt="Product Image"
+                style="max-width: 330px; max-height: 330px; object-fit: contain"
+                class="img-fluid"
+              />
             </div>
 
             <!-- Thông tin -->
             <div class="col-md-6">
               <p class="fs-3">[[${product.title}]]</p>
               <p>
-                <span class="fw-bold">Description: </span><br/>[[${product.description}]]
+                <span class="fw-bold">Description: </span
+                ><br />[[${product.description}]]
               </p>
               <p>
-                <span class="fw-bold">Details:</span><br/>
+                <span class="fw-bold">Details:</span><br />
                 Status:
                 <th:block th:if="${product.stock > 0}">
                   <span class="badge bg-success">Available</span>
@@ -43,35 +60,48 @@
                 <th:block th:unless="${product.stock > 0}">
                   <span class="badge bg-warning">Out of Stock</span>
                 </th:block>
-                <br/>
-                Category: [[${product.category}]]<br/>
-                Policy: 7 Days Replacement & Return <br/>
+                <br />
+                Category: [[${product.category}]]<br />
+                Policy: 7 Days Replacement & Return <br />
 
                 <span class="fw-bold">Rating:</span>
-                <span th:if="${avgRating > 0}"
-                      th:text="${#numbers.formatDecimal(avgRating,1,1)} + ' ★'"></span>
+                <span
+                  th:if="${avgRating > 0}"
+                  th:text="${#numbers.formatDecimal(avgRating,1,1)} + ' ★'"
+                ></span>
                 <span th:if="${avgRating == 0}">Chưa có đánh giá</span>
               </p>
 
               <p class="fs-5 fw-bold">
-                Price:
-                [[${product.discountPrice}]] <i class="fas fa-dong-sign"></i>
-                <span class="fs-6 text-decoration-line-through text-secondary">[[${product.price}]]</span>
-                <span class="fs-6 text-success">[[${product.discount}]]% off</span>
+                Price: [[${product.discountPrice}]]
+                <i class="fas fa-dong-sign"></i>
+                <span class="fs-6 text-decoration-line-through text-secondary"
+                  >[[${product.price}]]</span
+                >
+                <span class="fs-6 text-success"
+                  >[[${product.discount}]]% off</span
+                >
               </p>
 
               <!-- Add to Cart -->
               <th:block th:if="${product.stock > 0}">
                 <th:block th:if="${user == null}">
-                  <a href="/signin" class="btn btn-danger col-md-12">Add To Cart</a>
+                  <a href="/signin" class="btn btn-danger col-md-12"
+                    >Add To Cart</a
+                  >
                 </th:block>
                 <th:block th:unless="${user == null}">
-                  <a th:href="@{'/user/addCart?pid=' + ${product.id} + '&uid=' + ${user.id}}"
-                     class="btn btn-danger col-md-12">Add To Cart</a>
+                  <a
+                    th:href="@{'/user/addCart?pid=' + ${product.id} + '&uid=' + ${user.id}}"
+                    class="btn btn-danger col-md-12"
+                    >Add To Cart</a
+                  >
                 </th:block>
               </th:block>
               <th:block th:unless="${product.stock > 0}">
-                <a href="#" class="btn btn-warning text-white col-md-12">Out of Stock</a>
+                <a href="#" class="btn btn-warning text-white col-md-12"
+                  >Out of Stock</a
+                >
               </th:block>
             </div>
           </div>
@@ -82,29 +112,47 @@
           <h4>Customer Reviews</h4>
 
           <th:block th:if="${user == null}">
-            <p class="text-muted"><a href="/signin">Login</a> to write a review.</p>
+            <p class="text-muted">
+              <a href="/signin">Login</a> to write a review.
+            </p>
           </th:block>
 
-          <button id="toggleBtn" type="button" class="btn btn-link p-0 mb-3" onclick="toggleReviews()">
+          <button
+            id="toggleBtn"
+            type="button"
+            class="btn btn-link p-0 mb-3"
+            onclick="toggleReviews()"
+          >
             Xem chi tiết đánh giá
           </button>
 
           <div id="reviews-container" style="display: none">
             <ul>
-              <li th:each="r : ${reviews}" class="mb-3"><!-- <-- tên biến 'reviews' khớp controller -->
-                <b th:text="${r.user.name}">User</b> - <span th:text="${r.rating} + '★'"></span>
+              <li th:each="r : ${reviews}" class="mb-3">
+                <!-- <-- tên biến 'reviews' khớp controller -->
+                <b th:text="${r.user.name}">User</b> -
+                <span th:text="${r.rating} + '★'"></span>
                 <p th:text="${r.comment}"></p>
 
-                <div th:if="${user != null and (r.user.id == user.id or user.role == 'ROLE_ADMIN')}">
-                  <form th:action="@{'/review/delete/' + ${r.id}}" method="post"
-                        onsubmit="return confirm('Bạn có chắc muốn xóa review này không?');">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                <div
+                  th:if="${user != null and (r.user.id == user.id or user.role == 'ROLE_ADMIN')}"
+                >
+                  <form
+                    th:action="@{'/review/delete/' + ${r.id}}"
+                    method="post"
+                    onsubmit="return confirm('Bạn có chắc muốn xóa review này không?');"
+                  >
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Delete
+                    </button>
                   </form>
                 </div>
 
                 <small class="text-muted">
                   Ngày đánh giá:
-                  <span th:text="${#temporals.format(r.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                  <span
+                    th:text="${#temporals.format(r.createdAt, 'dd/MM/yyyy HH:mm')}"
+                  ></span>
                 </small>
               </li>
             </ul>
@@ -129,9 +177,15 @@
               </div>
               <div class="mb-2">
                 <label for="comment">Comment:</label>
-                <textarea id="comment" name="comment" class="form-control"></textarea>
+                <textarea
+                  id="comment"
+                  name="comment"
+                  class="form-control"
+                ></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Submit Review</button>
+              <button type="submit" class="btn btn-primary">
+                Submit Review
+              </button>
             </form>
           </div>
         </div>

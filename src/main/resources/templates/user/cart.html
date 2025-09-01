@@ -34,7 +34,7 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">S1 No</th>
+                      <th scope="col">No</th>
                       <th scope="col">Image</th>
                       <th scope="col">Product Name</th>
                       <th scope="col">Price</th>
@@ -55,25 +55,33 @@
                       <td>[[${cart.product.title}]]</td>
                       <td>[[${cart.product.discountPrice}]]</td>
                       <td class="text-center">
-                        <a
-                          th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}"
+                        <div
+                          class="d-flex justify-content-left align-items-center gap-2"
                         >
-                          <i class="fa-solid fa-minus"></i>
-                        </a>
-                        [ [[${cart.quantity}]] ]
-                        <a
-                          th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}"
-                        >
-                          <i class="fa-solid fa-plus"></i>
-                        </a>
+                          <a
+                            th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}"
+                          >
+                            <i class="fa-solid fa-minus"></i>
+                          </a>
+                          <span class="px-2">[[${cart.quantity}]]</span>
+                          <a
+                            th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}"
+                          >
+                            <i class="fa-solid fa-plus"></i>
+                          </a>
+                        </div>
                       </td>
-                      <td>[[${cart.totalPrice}]]<i class="fas fa-dong-sign"></i></td>
+                      <td>
+                        [[${cart.totalPrice}]]<i class="fas fa-dong-sign"></i>
+                      </td>
                     </tr>
 
                     <tr>
                       <td colspan="4"></td>
                       <td class="fw-bold">Total Price</td>
-                      <td class="fw-bold">[[${totalOrderPrice}]]<i class="fas fa-dong-sign"></i></td>
+                      <td class="fw-bold">
+                        [[${totalOrderPrice}]]<i class="fas fa-dong-sign"></i>
+                      </td>
                     </tr>
                   </tbody>
                 </table>

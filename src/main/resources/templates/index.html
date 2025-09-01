@@ -12,14 +12,13 @@
     <section>
       <!-- Start Slider  -->
 
-      <div id="carouselExample" class="carousel slide">
-        <div class="carousel-inner" style="margin-top: 20px;">
+      <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner" style="margin-top: 20px">
           <div class="carousel-item active">
             <img
               src="img/Banner_Shopping_Web.png"
               class="d-block w-100"
               alt="..."
-              height="100%"
             />
           </div>
           <div class="carousel-item">
@@ -27,7 +26,6 @@
               src="img/Banner_Do_Gia_Dung.png"
               class="d-block w-100"
               alt="..."
-              height="100%"
             />
           </div>
           <div class="carousel-item">
@@ -35,7 +33,6 @@
               src="img/Banner_Dien_Thoai.png"
               class="d-block w-100"
               alt="..."
-              height="100%"
             />
           </div>
         </div>
@@ -75,7 +72,7 @@
                   width="65%"
                   height="65%"
                 />
-                <br/>
+                <br />
                 <a
                   th:href="@{'/products?category='+${c.name}}"
                   class="text-decoration-none"
@@ -153,7 +150,7 @@
                   th:src="@{'img/product_img/'+${p.image}}"
                   class=""
                   width="65%"
-                  height="140px"
+                  height="65%"
                 />
                 <p class="text-center">
                   <a

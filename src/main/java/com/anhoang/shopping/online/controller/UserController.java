@@ -81,14 +81,29 @@ public class UserController {
 	}
 
 	@GetMapping("/cart")
-	public String loadCartPage(Principal p, Model m) {
+	public String loadCartPage(
+			@RequestParam(required = false) List<Integer> selectedCartIds,
+			Principal p, Model m) {
+
 		UserDtls user = getLoggedInUserDetails(p);
 		List<Cart> carts = cartService.getCartsByUser(user.getId());
 		m.addAttribute("carts", carts);
-		if (carts.size() > 0) {
-			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
-			m.addAttribute("totalOrderPrice", totalOrderPrice);
+
+		// Nếu không có chọn gì thì mặc định tất cả
+		if (selectedCartIds == null) {
+			selectedCartIds = carts.stream().map(Cart::getId).toList();
 		}
+
+		// tạo biến final để dùng trong stream
+		List<Integer> finalSelectedIds = selectedCartIds;
+
+		double totalOrderPrice = carts.stream()
+				.filter(c -> finalSelectedIds.contains(c.getId()))
+				.mapToDouble(Cart::getTotalPrice)
+				.sum();
+
+		m.addAttribute("totalOrderPrice", totalOrderPrice);
+
 		return "/user/cart";
 	}
 
