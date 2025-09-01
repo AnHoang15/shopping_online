@@ -1,3 +1,5 @@
-Cách lấy database (cài trước khi mở web)
-Vào link: http://localhost:8080/h2-console/login.do?jsessionid=a657a1331f229d8c4c49cd6a244d2618
-Chỉnh url thành: jdbc:h2:mem:shoppingdb
+1. Import file shopping_online.sql vào phpMyAdmin
+2. Cấu hình application.properties:
+   spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce_db
+   spring.datasource.username=root
+   spring.datasource.password=
