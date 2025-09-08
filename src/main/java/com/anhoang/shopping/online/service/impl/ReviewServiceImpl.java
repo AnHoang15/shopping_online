@@ -4,7 +4,6 @@ import com.anhoang.shopping.online.model.Product;
 import com.anhoang.shopping.online.model.Review;
 import com.anhoang.shopping.online.model.UserDtls;
 import com.anhoang.shopping.online.repository.ReviewRespository;
-import com.anhoang.shopping.online.repository.ReviewRespository;
 import com.anhoang.shopping.online.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
